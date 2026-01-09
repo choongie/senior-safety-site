@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- PRIVACY TAG: This tells search engines NOT to index this page -->
+    <meta name="robots" content="noindex, nofollow">
+    <title>Senior Safety Resource Hub</title>
+    <meta name="description" content="A resource guide for seniors on identifying and preventing fraud, including phishing, voice cloning, romance scams, and robocalls.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons for visual cues -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Marked.js for markdown rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        /* Custom accessibility adjustments */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+        }
+        .text-reading {
+            font-size: 1.125rem; /* 18px base size for better readability */
+        }
+        /* High contrast focus states for accessibility */
+        a:focus, button:focus, textarea:focus, input:focus {
+            outline: 3px solid #2563EB;
+            outline-offset: 2px;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* Quiz Specific Styles */
+        .quiz-overlay {
+            background-color: rgba(255, 255, 255, 0.98);
+        }
+        .option-btn:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 relative">
+
+    <!-- Navigation / Header -->
+    <header class="bg-blue-900 text-white py-8 shadow-lg">
+        <div class="container mx-auto px-4 max-w-4xl text-center">
+            <h1 class="text-3xl md:text-5xl font-bold mb-4">Stay Safe: A Guide for Seniors</h1>
+            <p class="text-xl md:text-2xl font-light text-blue-100">Protecting yourself and your loved ones from modern scams.</p>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="container mx-auto px-4 py-8 max-w-4xl">
+
+        <!-- Introduction -->
+        <section class="bg-white rounded-xl shadow-md p-6 md:p-8 mb-10 border-t-4 border-blue-600">
+            <div class="flex flex-col md:flex-row items-start md:items-center gap-6">
+                <div class="flex-1">
+                    <h2 class="text-2xl font-bold text-blue-900 mb-4">Welcome to Your Resource Hub</h2>
+                    <p class="text-reading text-gray-700 mb-4">
+                        Thank you for attending the presentation. This website is your "take-home" companion. 
+                        Here you will find the slides from today, a podcast you can listen to anytime, 
+                        quizzes to test your knowledge, and detailed articles on the topics we discussed.
+                    </p>
+                    <p class="text-reading text-gray-700 font-semibold">
+                        Please bookmark this page or scan the QR code on your flyer to return here anytime.
+                    </p>
+                </div>
+                <div class="bg-blue-50 p-4 rounded-lg shrink-0 mx-auto md:mx-0">
+                    <i data-lucide="shield-check" class="w-16 h-16 text-blue-600"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI TOOLS SECTION -->
+        <section class="mb-12">
+            <div class="bg-gradient-to-r from-indigo-600 to-purple-700 rounded-xl shadow-xl overflow-hidden text-white">
+                <div class="p-6 md:p-8 border-b border-indigo-500/30">
+                    <h2 class="text-2xl md:text-3xl font-bold flex items-center gap-3">
+                        <i data-lucide="sparkles" class="w-8 h-8 text-yellow-300"></i>
+                        AI Safety Assistant
+                    </h2>
+                    <p class="mt-2 text-indigo-100 text-lg">Use these smart tools to check messages or practice your safety skills.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2">
+                    <!-- Tool 1: Scam Detector -->
+                    <div class="p-6 md:p-8 border-b md:border-b-0 md:border-r border-indigo-500/30 bg-white/5">
+                        <h3 class="text-xl font-bold mb-3 flex items-center gap-2">
+                            <i data-lucide="search" class="w-6 h-6"></i> 
+                            Check a Message
+                        </h3>
+                        <p class="mb-4 text-indigo-100 text-sm">Paste a confusing email or text message below. We'll check if it looks like a scam.</p>
+                        <textarea id="scamInput" class="w-full h-32 p-3 rounded-lg text-slate-900 text-lg focus:ring-4 focus:ring-yellow-400 border-none" placeholder="Paste the text here... (e.g. 'Grandma I'm in jail please send money')"></textarea>
+                        <button onclick="analyzeScam()" class="mt-4 w-full bg-yellow-400 hover:bg-yellow-300 text-blue-900 font-bold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-lg">
+                            <span>✨ Analyze Message</span>
+                        </button>
+                        <div id="scamResult" class="mt-4 hidden p-4 rounded-lg bg-white text-slate-900"></div>
+                    </div>
+
+                    <!-- Tool 2: Practice Scenario -->
+                    <div class="p-6 md:p-8 bg-white/5">
+                        <h3 class="text-xl font-bold mb-3 flex items-center gap-2">
+                            <i data-lucide="message-circle" class="w-6 h-6"></i>
+                            Practice Your Response
+                        </h3>
+                        <p class="mb-4 text-indigo-100 text-sm">Not sure what to say? Get a fake practice scenario and try typing a safe response.</p>
+                        
+                        <div id="practiceArea" class="space-y-4">
+                            <button id="startPracticeBtn" onclick="generateScenario()" class="w-full bg-indigo-500 hover:bg-indigo-400 text-white font-bold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-lg border border-indigo-400">
+                                <span>✨ Start Practice Scenario</span>
+                            </button>
+                            
+                            <div id="scenarioBox" class="hidden">
+                                <div class="bg-white/10 p-4 rounded-lg border border-indigo-300/30 mb-4">
+                                    <p class="font-bold text-yellow-300 text-sm uppercase mb-1">Incoming Message:</p>
+                                    <p id="scenarioText" class="italic text-lg"></p>
+                                </div>
+                                <textarea id="userResponse" class="w-full h-24 p-3 rounded-lg text-slate-900 text-lg focus:ring-4 focus:ring-yellow-400 border-none mb-3" placeholder="Type your response here..."></textarea>
+                                <button onclick="checkResponse()" class="w-full bg-emerald-500 hover:bg-emerald-400 text-white font-bold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-lg">
+                                    <span>✨ Check My Answer</span>
+                                </button>
+                            </div>
+                            
+                            <div id="feedbackResult" class="hidden p-4 rounded-lg bg-white text-slate-900 mt-4"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Links Grid -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-slate-800 mb-6 text-center md:text-left">Presentation Resources</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                <!-- Card 1: Slides -->
+                <a href="#" class="group block bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-xl hover:border-blue-400 transition-all duration-300">
+                    <div class="flex items-center justify-center w-12 h-12 bg-indigo-100 text-indigo-600 rounded-full mb-4 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                        <i data-lucide="presentation" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">View Presentation Slides</h3>
+                    <p class="text-gray-600">Review the visual slides used during the talk.</p>
+                    <span class="inline-block mt-4 text-indigo-600 font-semibold group-hover:underline">Open Slides &rarr;</span>
+                </a>
+
+                <!-- Card 2: Podcast -->
+                <a href="podcast.m4a" class="group block bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-xl hover:border-blue-400 transition-all duration-300">
+                    <div class="flex items-center justify-center w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full mb-4 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                        <i data-lucide="headphones" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Listen to the Podcast</h3>
+                    <p class="text-gray-600">An audio summary of the key fraud prevention topics.</p>
+                    <span class="inline-block mt-4 text-emerald-600 font-semibold group-hover:underline">Listen Now &rarr;</span>
+                </a>
+
+                <!-- Card 3: Quiz -->
+                <button onclick="startQuiz()" class="text-left w-full group block bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-xl hover:border-blue-400 transition-all duration-300">
+                    <div class="flex items-center justify-center w-12 h-12 bg-amber-100 text-amber-600 rounded-full mb-4 group-hover:bg-amber-600 group-hover:text-white transition-colors">
+                        <i data-lucide="clipboard-check" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Take the Safety Quiz</h3>
+                    <p class="text-gray-600">Test what you've learned and sharpen your skills.</p>
+                    <span class="inline-block mt-4 text-amber-600 font-semibold group-hover:underline">Start Quiz &rarr;</span>
+                </button>
+
+            </div>
+        </section>
+
+        <!-- QUIZ MODAL (Hidden by default) -->
+        <div id="quizModal" class="fixed inset-0 z-50 hidden quiz-overlay flex items-center justify-center p-4 overflow-y-auto">
+            <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl border-2 border-blue-100 overflow-hidden relative flex flex-col max-h-[90vh]">
+                
+                <!-- Quiz Header -->
+                <div class="bg-blue-900 text-white p-6 flex justify-between items-center shrink-0">
+                    <div>
+                        <h2 class="text-2xl font-bold">Safety Skills Quiz</h2>
+                        <p class="text-blue-200 text-sm">Question <span id="currentQuestionNum">1</span> of 20</p>
+                    </div>
+                    <button onclick="closeQuiz()" class="p-2 hover:bg-blue-800 rounded-full transition-colors">
+                        <i data-lucide="x" class="w-8 h-8"></i>
+                    </button>
+                </div>
+
+                <!-- Quiz Body -->
+                <div class="p-6 md:p-8 overflow-y-auto">
+                    <!-- Intro View -->
+                    <div id="quizIntro" class="text-center py-8">
+                        <div class="w-20 h-20 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <i data-lucide="brain-circuit" class="w-10 h-10"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-4">Ready to test your knowledge?</h3>
+                        <p class="text-lg text-slate-600 mb-8">We will ask you 20 questions about Phishing, Voice Cloning, Romance Scams, and Robocalls. Take your time!</p>
+                        <button onclick="nextQuestion()" class="bg-blue-600 hover:bg-blue-700 text-white text-xl font-bold py-4 px-12 rounded-full shadow-lg transition-transform hover:scale-105">
+                            Begin Quiz
+                        </button>
+                    </div>
+
+                    <!-- Question View -->
+                    <div id="questionContainer" class="hidden">
+                        <div class="mb-2 text-sm font-bold tracking-wide uppercase text-indigo-600" id="topicBadge">Topic Name</div>
+                        <h3 class="text-2xl font-bold text-slate-900 mb-8 leading-snug" id="questionText">Question goes here?</h3>
+                        
+                        <div class="space-y-4" id="optionsContainer">
+                            <!-- Options injected by JS -->
+                        </div>
+
+                        <!-- Feedback Area -->
+                        <div id="answerFeedback" class="hidden mt-6 p-4 rounded-xl border-l-4">
+                            <div class="flex items-start gap-3">
+                                <div id="feedbackIcon"></div>
+                                <div>
+                                    <h4 class="font-bold text-lg" id="feedbackTitle"></h4>
+                                    <p class="text-slate-700 mt-1" id="feedbackText"></p>
+                                </div>
+                            </div>
+                            <button onclick="nextQuestion()" class="mt-4 bg-slate-800 text-white font-semibold py-2 px-6 rounded-lg hover:bg-slate-700 transition-colors">
+                                Next Question &rarr;
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Results View -->
+                    <div id="resultsContainer" class="hidden text-center py-8">
+                        <div class="w-24 h-24 mx-auto mb-6 rounded-full flex items-center justify-center border-4" id="scoreCircle">
+                            <span class="text-3xl font-bold" id="scoreText"></span>
+                        </div>
+                        <h3 class="text-3xl font-bold text-slate-900 mb-4" id="scoreTitle"></h3>
+                        <p class="text-lg text-slate-600 mb-8" id="scoreMessage"></p>
+                        <div class="flex flex-col gap-4 max-w-xs mx-auto">
+                            <button onclick="restartQuiz()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">
+                                Try Again
+                            </button>
+                            <button onclick="closeQuiz()" class="text-slate-500 font-semibold hover:text-slate-800 hover:underline">
+                                Return to Articles
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Generated Articles Section -->
+        <section>
+            <h2 class="text-3xl font-bold text-slate-800 mb-8 border-b pb-4">In-Depth Guides</h2>
+            
+            <div class="space-y-10">
+                
+                <!-- Article 1: Phishing -->
+                <article class="bg-white rounded-xl shadow p-6 md:p-8">
+                    <div class="flex items-center gap-3 mb-4">
+                        <i data-lucide="mail-warning" class="w-8 h-8 text-red-500"></i>
+                        <h3 class="text-2xl font-bold text-gray-900">1. Identifying Phishing Scams</h3>
+                    </div>
+                    <div class="text-reading text-gray-700 space-y-4">
+                        <p><strong>What is it?</strong> Phishing occurs when scammers send fake emails or text messages pretending to be from companies you trust—like Amazon, your bank, Medicare, or the IRS.</p>
+                        <p><strong>The Trap:</strong> They often create a false sense of urgency. You might see messages like "Your account has been locked" or "A suspicious purchase was made." They want you to panic and click a link to "fix" the problem.</p>
+                        <div class="bg-red-50 border-l-4 border-red-500 p-4 my-4">
+                            <h4 class="font-bold text-red-800 mb-2">How to Stay Safe:</h4>
+                            <ul class="list-disc list-inside space-y-2 text-gray-800">
+                                <li><strong>Don't Click Links:</strong> If you get an urgent message, do not click the link inside. Go directly to the company's official website using your browser.</li>
+                                <li><strong>Check the Sender:</strong> Look closely at the email address. Does it look strange? (e.g., <em class="text-sm">support@amazon-security-alert.com</em> instead of <em class="text-sm">amazon.com</em>).</li>
+                                <li><strong>Call Directly:</strong> Use the phone number on the back of your credit card, not the number in the email.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Article 2: Voice Cloning -->
+                <article class="bg-white rounded-xl shadow p-6 md:p-8">
+                    <div class="flex items-center gap-3 mb-4">
+                        <i data-lucide="mic-2" class="w-8 h-8 text-orange-500"></i>
+                        <h3 class="text-2xl font-bold text-gray-900">2. Voice Cloning & The "Grandparent Scam"</h3>
+                    </div>
+                    <div class="text-reading text-gray-700 space-y-4">
+                        <p><strong>What is it?</strong> Criminals now use Artificial Intelligence (AI) to clone voices. By taking a short audio clip from a social media video (like Facebook or Instagram), they can make a computer speak in your loved one's exact voice.</p>
+                        <p><strong>The Trap:</strong> You receive a frantic call that sounds exactly like your grandchild. They claim to be in trouble—arrested, in a car accident, or stuck in a foreign country—and beg you to send money immediately via wire transfer or gift cards. They often beg, "Please don't tell mom and dad."</p>
+                        <div class="bg-orange-50 border-l-4 border-orange-500 p-4 my-4">
+                            <h4 class="font-bold text-orange-800 mb-2">How to Stay Safe:</h4>
+                            <ul class="list-disc list-inside space-y-2 text-gray-800">
+                                <li><strong>Hang Up and Verify:</strong> Even if it sounds real, hang up. Call your grandchild or their parents on their known cell phone numbers.</li>
+                                <li><strong>Create a "Safe Word":</strong> Establish a secret family password that only you and your family know. If someone calls claiming to be family in trouble, ask for the safe word. If they don't know it, it's a scam.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Article 3: Romance Scams -->
+                <article class="bg-white rounded-xl shadow p-6 md:p-8">
+                    <div class="flex items-center gap-3 mb-4">
+                        <i data-lucide="heart-off" class="w-8 h-8 text-pink-500"></i>
+                        <h3 class="text-2xl font-bold text-gray-900">3. Romance Scams</h3>
+                    </div>
+                    <div class="text-reading text-gray-700 space-y-4">
+                        <p><strong>What is it?</strong> Scammers create fake profiles on dating sites or social media to find victims. They are patient and may spend weeks or months building a relationship with you online.</p>
+                        <p><strong>The Trap:</strong> They "love bomb" you with affection very quickly. They often claim to be working overseas (military, oil rig, doctor) which gives them an excuse for why they cannot meet in person. Eventually, a "crisis" happens, and they need money for a plane ticket, surgery, or a visa.</p>
+                        <div class="bg-pink-50 border-l-4 border-pink-500 p-4 my-4">
+                            <h4 class="font-bold text-pink-800 mb-2">How to Stay Safe:</h4>
+                            <ul class="list-disc list-inside space-y-2 text-gray-800">
+                                <li><strong>Never Send Money:</strong> Never send money, gift cards, or cryptocurrency to someone you haven't met in person, no matter how much you trust them.</li>
+                                <li><strong>Slow Down:</strong> Be wary of anyone declaring their undying love after only a few weeks of chatting online.</li>
+                                <li><strong>Talk to Someone:</strong> Show the profile and messages to a friend or family member. Often, a third party can see the red flags that you might miss.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Article 4: Robo Calls -->
+                <article class="bg-white rounded-xl shadow p-6 md:p-8">
+                    <div class="flex items-center gap-3 mb-4">
+                        <i data-lucide="phone-missed" class="w-8 h-8 text-indigo-500"></i>
+                        <h3 class="text-2xl font-bold text-gray-900">4. Robo Calls & Caller ID Spoofing</h3>
+                    </div>
+                    <div class="text-reading text-gray-700 space-y-4">
+                        <p><strong>What is it?</strong> Automated phone calls delivering prerecorded messages. Scammers use "spoofing" technology to make their phone number look like a local number, or even like a government agency (Social Security, Medicare), so you are more likely to answer.</p>
+                        <p><strong>The Trap:</strong> You pick up and hear a recording about "Lowering your credit card rate," "Extending your car warranty," or a threat regarding your Social Security benefits. They often ask you to "Press 1" to speak to an agent.</p>
+                        <div class="bg-indigo-50 border-l-4 border-indigo-500 p-4 my-4">
+                            <h4 class="font-bold text-indigo-800 mb-2">How to Stay Safe:</h4>
+                            <ul class="list-disc list-inside space-y-2 text-gray-800">
+                                <li><strong>Don't Answer:</strong> If you don't recognize the number, let it go to voicemail. Important callers will leave a message.</li>
+                                <li><strong>Don't Press Buttons:</strong> If you answer a robocall, do not press any numbers to "unsubscribe" or speak to a human. This just confirms to the scammers that your phone number is active, and they will sell your number to other scammers.</li>
+                                <li><strong>Use Blocking Tools:</strong> Ask your phone carrier about call-blocking services or apps that can filter out spam calls automatically.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-800 text-white py-12 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <h3 class="text-xl font-bold mb-4">Need Help?</h3>
+            <p class="mb-6 text-slate-300 max-w-2xl mx-auto">
+                If you suspect you have been a victim of fraud, do not be ashamed. It happens to millions of people every year. Report it immediately.
+            </p>
+            <div class="flex flex-col md:flex-row justify-center gap-4 mb-8">
+                <a href="https://www.justice.gov/elderjustice/senior-scam-alert" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">
+                    Report to DOJ Elder Justice
+                </a>
+                <a href="https://reportfraud.ftc.gov/" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">
+                    Report to FTC
+                </a>
+            </div>
+            <p class="text-sm text-slate-500">
+                &copy; <script>document.write(new Date().getFullYear())</script> Senior Safety Presentation. All rights reserved.<br>
+                Content generated for educational purposes.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        lucide.createIcons();
+
+        // --- GEMINI API INTEGRATION ---
+        
+        // Use an empty string for the API key as per environment instructions
+        const apiKey = ""; 
+
+        /**
+         * Helper function to call Gemini API with exponential backoff
+         */
+        async function callGemini(prompt, systemInstruction = "") {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }],
+                systemInstruction: { parts: [{ text: systemInstruction }] }
+            };
+
+            const delays = [1000, 2000, 4000, 8000, 16000];
+            
+            for (let i = 0; i <= delays.length; i++) {
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        if (response.status === 429 && i < delays.length) {
+                            // Too many requests - wait and retry
+                            await new Promise(resolve => setTimeout(resolve, delays[i]));
+                            continue;
+                        }
+                        throw new Error(`API Error: ${response.status} ${response.statusText}`);
+                    }
+
+                    const data = await response.json();
+                    return data.candidates?.[0]?.content?.parts?.[0]?.text || "I'm sorry, I couldn't generate a response right now.";
+                } catch (error) {
+                    if (i === delays.length) throw error;
+                    await new Promise(resolve => setTimeout(resolve, delays[i]));
+                }
+            }
+        }
+
+        // --- FEATURE 1: SCAM ANALYZER ---
+
+        async function analyzeScam() {
+            const input = document.getElementById('scamInput').value.trim();
+            const resultDiv = document.getElementById('scamResult');
+            const btn = document.querySelector('button[onclick="analyzeScam()"]');
+
+            if (!input) {
+                alert("Please paste the message you want to check first.");
+                return;
+            }
+
+            // UI Loading State
+            const originalBtnText = btn.innerHTML;
+            btn.innerHTML = '<span class="spinner"></span> Checking...';
+            btn.disabled = true;
+            resultDiv.classList.add('hidden');
+            resultDiv.innerHTML = '';
+
+            try {
+                const systemPrompt = `You are a helpful, gentle assistant for seniors. Your job is to analyze text messages or emails to see if they are scams. 
+                If it is a scam, explain why clearly and simply. Focus on 'Red Flags' like urgency, requests for money/gift cards, or strange links.
+                Format your response in Markdown. Use bolding for key points.
+                If the text seems safe, say so, but advise caution.
+                Keep it under 150 words.`;
+
+                const response = await callGemini(`Analyze this message for a senior citizen. Is it a scam?\n\n"${input}"`, systemPrompt);
+                
+                // Render Result
+                resultDiv.classList.remove('hidden');
+                resultDiv.innerHTML = marked.parse(response);
+                
+                // Add color coding based on keywords
+                if (response.toLowerCase().includes('scam') || response.toLowerCase().includes('danger') || response.toLowerCase().includes('suspicious')) {
+                    resultDiv.classList.add('border-l-4', 'border-red-500', 'bg-red-50');
+                    resultDiv.classList.remove('border-green-500', 'bg-green-50');
+                } else {
+                    resultDiv.classList.add('border-l-4', 'border-green-500', 'bg-green-50');
+                    resultDiv.classList.remove('border-red-500', 'bg-red-50');
+                }
+
+            } catch (error) {
+                console.error(error);
+                resultDiv.classList.remove('hidden');
+                resultDiv.innerHTML = `<p class="text-red-600">I'm having trouble connecting to the internet right now. Please try again later.</p>`;
+            } finally {
+                btn.innerHTML = originalBtnText;
+                btn.disabled = false;
+            }
+        }
+
+        // --- FEATURE 2: PRACTICE SCENARIO ---
+
+        let currentScenario = "";
+
+        async function generateScenario() {
+            const btn = document.getElementById('startPracticeBtn');
+            const scenarioBox = document.getElementById('scenarioBox');
+            const scenarioText = document.getElementById('scenarioText');
+            const feedbackResult = document.getElementById('feedbackResult');
+            const userInput = document.getElementById('userResponse');
+
+            // Reset UI
+            feedbackResult.classList.add('hidden');
+            feedbackResult.innerHTML = '';
+            userInput.value = '';
+            
+            // Loading State
+            const originalBtnText = btn.innerHTML;
+            btn.innerHTML = '<span class="spinner"></span> Creating Scenario...';
+            btn.disabled = true;
+
+            try {
+                const systemPrompt = `Generate a short, single-sentence text message that represents a common scam targeting seniors (e.g. Grandma scam, IRS scam, Package delivery scam). Do not explain it. Just give the scam message text.`;
+                
+                const response = await callGemini("Generate one scam message example.", systemPrompt);
+                currentScenario = response;
+
+                scenarioBox.classList.remove('hidden');
+                scenarioText.innerText = `"${currentScenario}"`;
+                
+                // Scroll to the box
+                scenarioBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            } catch (error) {
+                console.error(error);
+                alert("Could not generate a scenario. Please try again.");
+            } finally {
+                btn.innerHTML = originalBtnText;
+                btn.disabled = false;
+            }
+        }
+
+        async function checkResponse() {
+            const userResponse = document.getElementById('userResponse').value.trim();
+            const feedbackResult = document.getElementById('feedbackResult');
+            const btn = document.querySelector('button[onclick="checkResponse()"]');
+
+            if (!userResponse) {
+                alert("Please type a response first.");
+                return;
+            }
+
+            // Loading State
+            const originalBtnText = btn.innerHTML;
+            btn.innerHTML = '<span class="spinner"></span> Checking Answer...';
+            btn.disabled = true;
+
+            try {
+                const systemPrompt = `You are a safety coach for seniors.
+                The user was given this scam message: "${currentScenario}".
+                The user responded with: "${userResponse}".
+                
+                Evaluate their response. 
+                1. Did they stay safe? (Did they avoid giving info? Did they avoid clicking links?)
+                2. If they were rude to the scammer, that's okay, but remind them it's safer to just block/ignore.
+                3. If they fell for it, gently explain what they should have done instead.
+                
+                Keep response under 100 words. Use Markdown.`;
+
+                const response = await callGemini("Evaluate my response.", systemPrompt);
+
+                feedbackResult.classList.remove('hidden');
+                feedbackResult.innerHTML = marked.parse(response);
+                
+                // Color coding
+                feedbackResult.classList.add('border', 'border-indigo-200', 'bg-indigo-50');
+
+            } catch (error) {
+                console.error(error);
+                feedbackResult.classList.remove('hidden');
+                feedbackResult.innerText = "Error checking response.";
+            } finally {
+                btn.innerHTML = originalBtnText;
+                btn.disabled = false;
+            }
+        }
+
+        // --- QUIZ DATA & LOGIC ---
+        
+        const quizData = [
+            // TOPIC: PHISHING
+            {
+                topic: "Identifying Phishing",
+                question: "You receive an email from 'Netflix Support' saying your payment failed. The sender address is `netflix-help@gmail.com`. What should you do?",
+                options: [
+                    "Click the link to update your card.",
+                    "Reply to the email asking if it is real.",
+                    "Delete the email. Real companies use their own domain name (e.g. @netflix.com).",
+                    "Forward it to your friends."
+                ],
+                correct: 2,
+                feedback: "Correct! Scammers often use free email addresses like Gmail or Yahoo. A real company will always email from their official website domain."
+            },
+            {
+                topic: "Identifying Phishing",
+                question: "A text message says: 'URGENT: Your bank account is frozen. Click here immediately to unlock.' This is an example of:",
+                options: [
+                    "A helpful notification.",
+                    "False Urgency. Scammers want you to panic so you don't think clearly.",
+                    "A standard banking procedure.",
+                    "A lottery win."
+                ],
+                correct: 1,
+                feedback: "Exactly. 'Urgency' is the #1 tool of a scammer. They want you to act fast before you notice the red flags."
+            },
+            {
+                topic: "Identifying Phishing",
+                question: "True or False: The IRS will text you if you owe them money.",
+                options: [
+                    "True",
+                    "False"
+                ],
+                correct: 1,
+                feedback: "You are right. The IRS primarily mails letters. They do not initiate contact via text, email, or social media for unpaid taxes."
+            },
+            {
+                topic: "Identifying Phishing",
+                question: "If you are unsure if a bank alert is real, what is the safest way to check?",
+                options: [
+                    "Call the phone number on the back of your credit/debit card.",
+                    "Call the number in the text message.",
+                    "Reply to the text message.",
+                    "Click the link in the message."
+                ],
+                correct: 0,
+                feedback: "Perfect. The number on your card is guaranteed to be safe. Never use the phone number provided in the suspicious message itself."
+            },
+            {
+                topic: "Identifying Phishing",
+                question: "Which of these pieces of information will a legitimate company NEVER ask for via email?",
+                options: [
+                    "Your Feedback",
+                    "Your Password",
+                    "Your Order Number",
+                    "Your Name"
+                ],
+                correct: 1,
+                feedback: "Correct. No reputable company (Amazon, Google, your bank) will ever ask you to email them your password."
+            },
+
+            // TOPIC: VOICE CLONING
+            {
+                topic: "Voice Cloning",
+                question: "How do scammers create a fake version of your grandchild's voice?",
+                options: [
+                    "They hire a voice actor.",
+                    "They use Artificial Intelligence (AI) and audio from social media videos.",
+                    "They record your grandchild secretly.",
+                    "It is just a coincidence."
+                ],
+                correct: 1,
+                feedback: "Correct. Scammers can take short clips of a voice from Facebook, TikTok, or Instagram and use AI to make it say anything they want."
+            },
+            {
+                topic: "Voice Cloning",
+                question: "You get a call from your 'grandson' saying he is in jail and needs bail money. What should you do first?",
+                options: [
+                    "Run to the bank to get cash.",
+                    "Ask him why he was arrested.",
+                    "Hang up and call your grandson's known cell phone number to verify.",
+                    "Wire the money immediately."
+                ],
+                correct: 2,
+                feedback: "Yes! Always hang up and call the number you have saved in your contacts. Scammers often spoof caller ID to make it look real."
+            },
+            {
+                topic: "Voice Cloning",
+                question: "What is a 'Safe Word'?",
+                options: [
+                    "A password for your computer.",
+                    "A secret word your family shares. If a caller doesn't know it, they are a scammer.",
+                    "A word you say to police.",
+                    "A password for your bank."
+                ],
+                correct: 1,
+                feedback: "Exactly. Establishing a family 'Safe Word' is a powerful defense against AI voice clones."
+            },
+            {
+                topic: "Voice Cloning",
+                question: "The 'Grandparent Scam' usually insists you keep the problem a secret from whom?",
+                options: [
+                    "The Police",
+                    "The Parents (your own children)",
+                    "The Bank",
+                    "The Neighbors"
+                ],
+                correct: 1,
+                feedback: "Correct. They will beg you 'Please don't tell Mom/Dad, they will be so mad.' They do this so you don't call the parents and find out the child is actually safe at home."
+            },
+            {
+                topic: "Voice Cloning",
+                question: "Voice cloning scams often ask for payment via:",
+                options: [
+                    "A personal check.",
+                    "Wire transfers, Gift Cards, or Bitcoin.",
+                    "Credit Card.",
+                    "Cash in person."
+                ],
+                correct: 1,
+                feedback: "Right. These methods are instant and hard to trace. No legitimate legal or medical crisis is ever resolved with Gift Cards."
+            },
+
+            // TOPIC: ROMANCE SCAMS
+            {
+                topic: "Romance Scams",
+                question: "You met someone amazing online, but they say they cannot meet in person because they work on an Oil Rig overseas. This is likely:",
+                options: [
+                    "A Romance Scam.",
+                    "Bad luck.",
+                    "A true story.",
+                    "A coincidence."
+                ],
+                correct: 0,
+                feedback: "Correct. 'Oil Rigs', 'Military deployed overseas', and 'Doctors with Doctors Without Borders' are the most common cover stories for romance scammers."
+            },
+            {
+                topic: "Romance Scams",
+                question: "What is 'Love Bombing'?",
+                options: [
+                    "Sending actual bombs.",
+                    "Overwhelming you with affection, compliments, and declarations of love very quickly.",
+                    "Ignoring you for days.",
+                    "Asking for a date."
+                ],
+                correct: 1,
+                feedback: "Yes. Scammers try to make you fall in love fast so you stop thinking logically when they eventually ask for money."
+            },
+            {
+                topic: "Romance Scams",
+                question: "Your online boyfriend/girlfriend suddenly has a 'medical emergency' and needs $500. You should:",
+                options: [
+                    "Send the money.",
+                    "Offer to pay the hospital directly (scammers will refuse this).",
+                    "Cut off all contact. This is a scam.",
+                    "Ask for a receipt."
+                ],
+                correct: 2,
+                feedback: "Correct. Never send money to someone you have not met in person, no matter how sad the story is."
+            },
+            {
+                topic: "Romance Scams",
+                question: "True or False: If you have video chatted with them once, they cannot be a scammer.",
+                options: [
+                    "True",
+                    "False"
+                ],
+                correct: 1,
+                feedback: "False. Scammers can use stolen videos or AI filters to fake a video call, or briefly hire an actor."
+            },
+            {
+                topic: "Romance Scams",
+                question: "Who is the best person to show a new online relationship profile to?",
+                options: [
+                    "No one, keep it secret.",
+                    "A trusted friend or family member.",
+                    "The scammer.",
+                    "The bank teller."
+                ],
+                correct: 1,
+                feedback: "Right. A friend or family member is not emotionally involved and will often spot the red flags that you might miss."
+            },
+
+            // TOPIC: ROBO CALLS
+            {
+                topic: "Robo Calls",
+                question: "What is 'Caller ID Spoofing'?",
+                options: [
+                    "When a clown calls you.",
+                    "When scammers fake the name/number on your phone screen to look local or official.",
+                    "When your phone breaks.",
+                    "When you block a number."
+                ],
+                correct: 1,
+                feedback: "Correct. Just because your phone says 'Social Security' or a local area code does not mean the call is real."
+            },
+            {
+                topic: "Robo Calls",
+                question: "A robocall says 'Press 1 to be removed from our list.' What should you do?",
+                options: [
+                    "Press 1.",
+                    "Press 2.",
+                    "Hang up immediately.",
+                    "Yell at them."
+                ],
+                correct: 2,
+                feedback: "Correct! Pressing buttons proves a human is there. They will just sell your number to more scammers. Just hang up."
+            },
+            {
+                topic: "Robo Calls",
+                question: "True or False: The Sheriff's office calls people to warn them they will be arrested for missing Jury Duty unless they pay a fine.",
+                options: [
+                    "True",
+                    "False"
+                ],
+                correct: 1,
+                feedback: "False. Police do not call to warn you of arrests, and they never demand payment over the phone to cancel a warrant."
+            },
+            {
+                topic: "Robo Calls",
+                question: "What is the best reaction to a call from an unknown number?",
+                options: [
+                    "Answer and say hello.",
+                    "Answer and stay silent.",
+                    "Let it go to voicemail.",
+                    "Answer and blow a whistle."
+                ],
+                correct: 2,
+                feedback: "Exactly. If it is important, they will leave a message. Answering unknown calls opens you up to fraud."
+            },
+            {
+                topic: "Robo Calls",
+                question: "What tools can help stop these calls?",
+                options: [
+                    "A louder ringtone.",
+                    "Call-blocking apps or services from your carrier.",
+                    "A new phone case.",
+                    "Answering every call."
+                ],
+                correct: 1,
+                feedback: "Correct. Most carriers (Verizon, AT&T, T-Mobile) offer free spam blocking apps. Ask your provider about them!"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let quizRunning = false;
+
+        function startQuiz() {
+            // Reset state
+            currentQuestionIndex = 0;
+            score = 0;
+            quizRunning = true;
+
+            // Show modal
+            document.getElementById('quizModal').classList.remove('hidden');
+            
+            // Show intro, hide others
+            document.getElementById('quizIntro').classList.remove('hidden');
+            document.getElementById('questionContainer').classList.add('hidden');
+            document.getElementById('resultsContainer').classList.add('hidden');
+            document.getElementById('currentQuestionNum').innerText = "1";
+        }
+
+        function closeQuiz() {
+            document.getElementById('quizModal').classList.add('hidden');
+            quizRunning = false;
+        }
+
+        function nextQuestion() {
+            // Check if we are just starting
+            if (document.getElementById('quizIntro').classList.contains('hidden') === false) {
+                document.getElementById('quizIntro').classList.add('hidden');
+                document.getElementById('questionContainer').classList.remove('hidden');
+                loadQuestion();
+                return;
+            }
+
+            // Check if we are ending
+            if (currentQuestionIndex >= quizData.length) {
+                showResults();
+                return;
+            }
+
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const q = quizData[currentQuestionIndex];
+            
+            // Update UI
+            document.getElementById('currentQuestionNum').innerText = currentQuestionIndex + 1;
+            document.getElementById('topicBadge').innerText = q.topic;
+            document.getElementById('questionText').innerText = q.question;
+            document.getElementById('answerFeedback').classList.add('hidden');
+
+            // Render Options
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = ''; // clear old options
+
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = "option-btn w-full text-left p-4 rounded-xl border-2 border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-all text-lg font-medium text-slate-700";
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIndex, btnElement) {
+            // Prevent multiple clicks
+            const allBtns = document.querySelectorAll('.option-btn');
+            allBtns.forEach(b => b.disabled = true);
+
+            const q = quizData[currentQuestionIndex];
+            const feedbackBox = document.getElementById('answerFeedback');
+            const feedbackTitle = document.getElementById('feedbackTitle');
+            const feedbackText = document.getElementById('feedbackText');
+            const feedbackIcon = document.getElementById('feedbackIcon');
+
+            feedbackBox.classList.remove('hidden');
+            
+            if (selectedIndex === q.correct) {
+                // Correct
+                score++;
+                btnElement.classList.remove('border-slate-200', 'hover:border-blue-400', 'hover:bg-blue-50');
+                btnElement.classList.add('bg-green-100', 'border-green-500', 'text-green-900');
+                
+                feedbackBox.className = "mt-6 p-4 rounded-xl border-l-4 bg-green-50 border-green-500";
+                feedbackTitle.innerText = "Correct!";
+                feedbackTitle.className = "font-bold text-lg text-green-800";
+                feedbackIcon.innerHTML = `<i data-lucide="check-circle" class="w-8 h-8 text-green-600"></i>`;
+            } else {
+                // Incorrect
+                btnElement.classList.remove('border-slate-200', 'hover:border-blue-400', 'hover:bg-blue-50');
+                btnElement.classList.add('bg-red-100', 'border-red-500', 'text-red-900');
+
+                // Highlight correct answer
+                allBtns[q.correct].classList.add('bg-green-100', 'border-green-500', 'text-green-900');
+
+                feedbackBox.className = "mt-6 p-4 rounded-xl border-l-4 bg-slate-100 border-slate-500";
+                feedbackTitle.innerText = "Not quite.";
+                feedbackTitle.className = "font-bold text-lg text-slate-800";
+                feedbackIcon.innerHTML = `<i data-lucide="info" class="w-8 h-8 text-slate-600"></i>`;
+            }
+
+            feedbackText.innerText = q.feedback;
+            lucide.createIcons(); // refresh icons in feedback
+
+            currentQuestionIndex++;
+        }
+
+        function showResults() {
+            document.getElementById('questionContainer').classList.add('hidden');
+            document.getElementById('resultsContainer').classList.remove('hidden');
+
+            const scoreText = document.getElementById('scoreText');
+            const scoreTitle = document.getElementById('scoreTitle');
+            const scoreMessage = document.getElementById('scoreMessage');
+            const scoreCircle = document.getElementById('scoreCircle');
+
+            scoreText.innerText = `${score} / ${quizData.length}`;
+
+            if (score >= 18) {
+                scoreTitle.innerText = "Fraud Fighting Expert!";
+                scoreMessage.innerText = "Incredible job! You know exactly how to spot a scam. You are well prepared to protect yourself and your family.";
+                scoreCircle.className = "w-32 h-32 mx-auto mb-6 rounded-full flex items-center justify-center border-4 border-green-500 bg-green-50 text-green-700";
+            } else if (score >= 14) {
+                scoreTitle.innerText = "Safety Savvy";
+                scoreMessage.innerText = "Good job! You missed a few, but you know the basics. Review the questions you missed to sharpen your skills.";
+                scoreCircle.className = "w-32 h-32 mx-auto mb-6 rounded-full flex items-center justify-center border-4 border-blue-500 bg-blue-50 text-blue-700";
+            } else {
+                scoreTitle.innerText = "Keep Learning";
+                scoreMessage.innerText = "Scams are tricky! We recommend reading the articles on this site and taking the quiz again to practice.";
+                scoreCircle.className = "w-32 h-32 mx-auto mb-6 rounded-full flex items-center justify-center border-4 border-amber-500 bg-amber-50 text-amber-700";
+            }
+        }
+
+        function restartQuiz() {
+            startQuiz();
+        }
+
+    </script>
+</body>
+</html>
